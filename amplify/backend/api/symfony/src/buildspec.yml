@@ -16,7 +16,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $symfony-amplify_REPOSITORY_URI:latest ./.
+      - docker build -t $symfony-amplify_REPOSITORY_URI:latest ./../../../../app
       - docker tag $symfony-amplify_REPOSITORY_URI:latest $symfony-amplify_REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
