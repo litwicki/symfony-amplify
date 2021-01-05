@@ -1,0 +1,48 @@
+{
+  "auth": {
+    "cognitoadc27a4f": {
+      "service": "Cognito",
+      "serviceType": "managed",
+      "providerPlugin": "awscloudformation"
+    }
+  },
+  "api": {
+    "symfony": {
+      "resourceName": "symfony",
+      "dependsOn": [
+        {
+          "category": "",
+          "resourceName": "NetworkStack",
+          "attributes": [
+            "ClusterName",
+            "VpcId",
+            "VpcCidrBlock",
+            "SubnetIds",
+            "VpcLinkId",
+            "CloudMapNamespaceId"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "cognitoadc27a4f",
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb"
+          ]
+        }
+      ],
+      "deploymentMechanism": "FULLY_MANAGED",
+      "imageSource": {
+        "type": "CUSTOM"
+      },
+      "restrictAccess": true,
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "ElasticContainer",
+      "authName": "cognitoadc27a4f",
+      "skipHashing": false,
+      "apiType": "REST",
+      "iamAccessUnavailable": true
+    }
+  }
+}

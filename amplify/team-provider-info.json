@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-symfonyamplify-dev-212226-authRole",
+      "UnauthRoleArn": "arn:aws:iam::207996445507:role/amplify-symfonyamplify-dev-212226-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::207996445507:role/amplify-symfonyamplify-dev-212226-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-symfonyamplify-dev-212226-deployment",
+      "UnauthRoleName": "amplify-symfonyamplify-dev-212226-unauthRole",
+      "StackName": "amplify-symfonyamplify-dev-212226",
+      "StackId": "arn:aws:cloudformation:us-west-2:207996445507:stack/amplify-symfonyamplify-dev-212226/01935640-4f16-11eb-9b77-0ac432390271",
+      "AmplifyAppId": "d2dw8qzdjpaeuw"
+    },
+    "categories": {
+      "auth": {
+        "cognitoadc27a4f": {}
+      }
+    }
+  }
+}
