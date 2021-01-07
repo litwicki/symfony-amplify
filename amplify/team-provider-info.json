@@ -1,20 +1,15 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-symfony-dev-145340-authRole",
-      "UnauthRoleArn": "arn:aws:iam::207996445507:role/amplify-symfony-dev-145340-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::207996445507:role/amplify-symfony-dev-145340-authRole",
+      "AuthRoleName": "amplify-symfony-dev-225528-authRole",
+      "UnauthRoleArn": "arn:aws:iam::207996445507:role/amplify-symfony-dev-225528-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::207996445507:role/amplify-symfony-dev-225528-authRole",
       "Region": "us-west-2",
-      "DeploymentBucketName": "amplify-symfony-dev-145340-deployment",
-      "UnauthRoleName": "amplify-symfony-dev-145340-unauthRole",
-      "StackName": "amplify-symfony-dev-145340",
-      "StackId": "arn:aws:cloudformation:us-west-2:207996445507:stack/amplify-symfony-dev-145340/07f0fda0-5072-11eb-b6b6-06fdd7339f39",
-      "AmplifyAppId": "d3eiomj8332lwy"
-    },
-    "categories": {
-      "auth": {
-        "cognitodf6e6347": {}
-      }
+      "DeploymentBucketName": "amplify-symfony-dev-225528-deployment",
+      "UnauthRoleName": "amplify-symfony-dev-225528-unauthRole",
+      "StackName": "amplify-symfony-dev-225528",
+      "StackId": "arn:aws:cloudformation:us-west-2:207996445507:stack/amplify-symfony-dev-225528/560cbc70-50b5-11eb-997a-06a27da41c23",
+      "AmplifyAppId": "d1dmtz4grgiiqg"
     }
   }
 }

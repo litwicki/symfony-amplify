@@ -1,11 +1,4 @@
 {
-  "auth": {
-    "cognitodf6e6347": {
-      "service": "Cognito",
-      "serviceType": "managed",
-      "providerPlugin": "awscloudformation"
-    }
-  },
   "api": {
     "symfony": {
       "resourceName": "symfony",
@@ -27,11 +20,10 @@
       "imageSource": {
         "type": "CUSTOM"
       },
-      "restrictAccess": true,
+      "restrictAccess": false,
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "ElasticContainer",
-      "authName": "cognitodf6e6347",
       "skipHashing": false,
       "apiType": "REST",
       "iamAccessUnavailable": true
