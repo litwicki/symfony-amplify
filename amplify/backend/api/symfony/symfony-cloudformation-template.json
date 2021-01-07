@@ -125,6 +125,50 @@
           {
             "Command": [],
             "EntryPoint": [],
+            "Environment": [
+              {
+                "Name": "MYSQL_DATABASE",
+                "Value": "${DATABASE_NAME}"
+              },
+              {
+                "Name": "MYSQL_USER",
+                "Value": "${DATABASE_USER}"
+              },
+              {
+                "Name": "MYSQL_PASSWORD",
+                "Value": "${DATABASE_PASSWORD}"
+              },
+              {
+                "Name": "MYSQL_ROOT_PASSWORD",
+                "Value": "${DATABASE_ROOT_PASSWORD}"
+              }
+            ],
+            "Essential": true,
+            "Image": "mariadb:latest",
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "databaseContainerLogGroup5DE9BE22"
+                },
+                "awslogs-stream-prefix": "ecs",
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                }
+              }
+            },
+            "Name": "database",
+            "PortMappings": [
+              {
+                "ContainerPort": 3306,
+                "Protocol": "tcp"
+              }
+            ],
+            "Secrets": []
+          },
+          {
+            "Command": [],
+            "EntryPoint": [],
             "Environment": [],
             "Essential": true,
             "Image": {
@@ -139,7 +183,7 @@
                           ":",
                           {
                             "Fn::GetAtt": [
-                              "symfonyRepository",
+                              "phpfpmRepository",
                               "Arn"
                             ]
                           }
@@ -156,7 +200,7 @@
                           ":",
                           {
                             "Fn::GetAtt": [
-                              "symfonyRepository",
+                              "phpfpmRepository",
                               "Arn"
                             ]
                           }
@@ -170,7 +214,7 @@
                   },
                   "/",
                   {
-                    "Ref": "symfonyRepository"
+                    "Ref": "phpfpmRepository"
                   },
                   ":latest"
                 ]
@@ -180,7 +224,7 @@
               "LogDriver": "awslogs",
               "Options": {
                 "awslogs-group": {
-                  "Ref": "symfonyContainerLogGroup0AD81F86"
+                  "Ref": "phpfpmContainerLogGroup3E960E02"
                 },
                 "awslogs-stream-prefix": "ecs",
                 "awslogs-region": {
@@ -188,52 +232,7 @@
                 }
               }
             },
-            "Name": "symfony",
-            "Secrets": [],
-            "WorkingDirectory": "/var/www/"
-          },
-          {
-            "Command": [],
-            "EntryPoint": [],
-            "Environment": [
-              {
-                "Name": "MYSQL_ROOT_PASSWORD",
-                "Value": "${DB_PASSWORD}"
-              },
-              {
-                "Name": "MYSQL_DATABASE",
-                "Value": "${DB_DATABASE}"
-              },
-              {
-                "Name": "MYSQL_USER",
-                "Value": "${DB_USERNAME}"
-              },
-              {
-                "Name": "MYSQL_PASSWORD",
-                "Value": "${DB_PASSWORD}"
-              }
-            ],
-            "Essential": true,
-            "Image": "mysql:5.7",
-            "LogConfiguration": {
-              "LogDriver": "awslogs",
-              "Options": {
-                "awslogs-group": {
-                  "Ref": "mysqldbContainerLogGroupC8D1E030"
-                },
-                "awslogs-stream-prefix": "ecs",
-                "awslogs-region": {
-                  "Ref": "AWS::Region"
-                }
-              }
-            },
-            "Name": "mysql-db",
-            "PortMappings": [
-              {
-                "ContainerPort": 3306,
-                "Protocol": "tcp"
-              }
-            ],
+            "Name": "phpfpm",
             "Secrets": []
           },
           {
@@ -241,12 +240,60 @@
             "EntryPoint": [],
             "Environment": [],
             "Essential": true,
-            "Image": "nginx:alpine",
+            "Image": {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Fn::Select": [
+                      4,
+                      {
+                        "Fn::Split": [
+                          ":",
+                          {
+                            "Fn::GetAtt": [
+                              "nginxRepository",
+                              "Arn"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  ".dkr.ecr.",
+                  {
+                    "Fn::Select": [
+                      3,
+                      {
+                        "Fn::Split": [
+                          ":",
+                          {
+                            "Fn::GetAtt": [
+                              "nginxRepository",
+                              "Arn"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/",
+                  {
+                    "Ref": "nginxRepository"
+                  },
+                  ":latest"
+                ]
+              ]
+            },
             "LogConfiguration": {
               "LogDriver": "awslogs",
               "Options": {
                 "awslogs-group": {
-                  "Ref": "phpnginxContainerLogGroup34737FCE"
+                  "Ref": "nginxContainerLogGroup9AE52157"
                 },
                 "awslogs-stream-prefix": "ecs",
                 "awslogs-region": {
@@ -254,10 +301,14 @@
                 }
               }
             },
-            "Name": "php-nginx",
+            "Name": "nginx",
             "PortMappings": [
               {
-                "ContainerPort": 8000,
+                "ContainerPort": 80,
+                "Protocol": "tcp"
+              },
+              {
+                "ContainerPort": 443,
                 "Protocol": "tcp"
               }
             ],
@@ -309,6 +360,37 @@
           "Statement": [
             {
               "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":logs:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":log-group:",
+                    {
+                      "Ref": "databaseContainerLogGroup5DE9BE22"
+                    },
+                    ":*"
+                  ]
+                ]
+              }
+            },
+            {
+              "Action": [
                 "ecr:BatchCheckLayerAvailability",
                 "ecr:GetDownloadUrlForLayer",
                 "ecr:BatchGetImage"
@@ -316,7 +398,7 @@
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "symfonyRepository",
+                  "phpfpmRepository",
                   "Arn"
                 ]
               }
@@ -350,10 +432,24 @@
                     },
                     ":log-group:",
                     {
-                      "Ref": "symfonyContainerLogGroup0AD81F86"
+                      "Ref": "phpfpmContainerLogGroup3E960E02"
                     },
                     ":*"
                   ]
+                ]
+              }
+            },
+            {
+              "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "nginxRepository",
+                  "Arn"
                 ]
               }
             },
@@ -381,38 +477,7 @@
                     },
                     ":log-group:",
                     {
-                      "Ref": "mysqldbContainerLogGroupC8D1E030"
-                    },
-                    ":*"
-                  ]
-                ]
-              }
-            },
-            {
-              "Action": [
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-              ],
-              "Effect": "Allow",
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":logs:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":log-group:",
-                    {
-                      "Ref": "phpnginxContainerLogGroup34737FCE"
+                      "Ref": "nginxContainerLogGroup9AE52157"
                     },
                     ":*"
                   ]
@@ -430,43 +495,54 @@
         ]
       }
     },
-    "symfonyContainerLogGroup0AD81F86": {
+    "databaseContainerLogGroup5DE9BE22": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/ecs/amplify-symfony-dev-145340-symfony-symfony",
+        "LogGroupName": "/ecs/amplify-symfony-dev-145340-symfony-database",
         "RetentionInDays": 30
       },
       "UpdateReplacePolicy": "Delete",
       "DeletionPolicy": "Delete"
     },
-    "symfonyRepository": {
+    "phpfpmContainerLogGroup3E960E02": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/ecs/amplify-symfony-dev-145340-symfony-phpfpm",
+        "RetentionInDays": 30
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    },
+    "phpfpmRepository": {
       "Type": "AWS::ECR::Repository",
       "Properties": {
         "LifecyclePolicy": {
           "LifecyclePolicyText": "{\"rules\":[{\"rulePriority\":10,\"selection\":{\"tagStatus\":\"tagged\",\"tagPrefixList\":[\"latest\"],\"countType\":\"imageCountMoreThan\",\"countNumber\":1},\"action\":{\"type\":\"expire\"}},{\"rulePriority\":100,\"selection\":{\"tagStatus\":\"any\",\"countType\":\"sinceImagePushed\",\"countNumber\":7,\"countUnit\":\"days\"},\"action\":{\"type\":\"expire\"}}]}"
         },
-        "RepositoryName": "amplify-symfony-dev-145340-api-symfony-symfony"
+        "RepositoryName": "amplify-symfony-dev-145340-api-symfony-phpfpm"
       },
       "UpdateReplacePolicy": "Retain",
       "DeletionPolicy": "Retain"
     },
-    "mysqldbContainerLogGroupC8D1E030": {
+    "nginxContainerLogGroup9AE52157": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/ecs/amplify-symfony-dev-145340-symfony-mysql-db",
+        "LogGroupName": "/ecs/amplify-symfony-dev-145340-symfony-nginx",
         "RetentionInDays": 30
       },
       "UpdateReplacePolicy": "Delete",
       "DeletionPolicy": "Delete"
     },
-    "phpnginxContainerLogGroup34737FCE": {
-      "Type": "AWS::Logs::LogGroup",
+    "nginxRepository": {
+      "Type": "AWS::ECR::Repository",
       "Properties": {
-        "LogGroupName": "/ecs/amplify-symfony-dev-145340-symfony-php-nginx",
-        "RetentionInDays": 30
+        "LifecyclePolicy": {
+          "LifecyclePolicyText": "{\"rules\":[{\"rulePriority\":10,\"selection\":{\"tagStatus\":\"tagged\",\"tagPrefixList\":[\"latest\"],\"countType\":\"imageCountMoreThan\",\"countNumber\":1},\"action\":{\"type\":\"expire\"}},{\"rulePriority\":100,\"selection\":{\"tagStatus\":\"any\",\"countType\":\"sinceImagePushed\",\"countNumber\":7,\"countUnit\":\"days\"},\"action\":{\"type\":\"expire\"}}]}"
+        },
+        "RepositoryName": "amplify-symfony-dev-145340-api-symfony-nginx"
       },
-      "UpdateReplacePolicy": "Delete",
-      "DeletionPolicy": "Delete"
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain"
     },
     "ServiceSG": {
       "Type": "AWS::EC2::SecurityGroup",
@@ -492,9 +568,17 @@
             "CidrIp": {
               "Ref": "NetworkStackVpcCidrBlock"
             },
-            "FromPort": 8000,
+            "FromPort": 80,
             "IpProtocol": "tcp",
-            "ToPort": 8000
+            "ToPort": 80
+          },
+          {
+            "CidrIp": {
+              "Ref": "NetworkStackVpcCidrBlock"
+            },
+            "FromPort": 443,
+            "IpProtocol": "tcp",
+            "ToPort": 443
           }
         ],
         "VpcId": {
@@ -526,11 +610,11 @@
             }
           }
         },
-        "ServiceName": "symfony-service-php-nginx-8000",
+        "ServiceName": "symfony-service-nginx-80",
         "ServiceRegistries": [
           {
-            "ContainerName": "php-nginx",
-            "ContainerPort": 8000,
+            "ContainerName": "nginx",
+            "ContainerPort": 80,
             "RegistryArn": {
               "Fn::GetAtt": [
                 "CloudmapService",
@@ -826,7 +910,7 @@
             "CLUSTER_NAME": {
               "Ref": "NetworkStackClusterName"
             },
-            "SERVICE_NAME": "symfony-service-php-nginx-8000"
+            "SERVICE_NAME": "symfony-service-nginx-80"
           }
         },
         "Timeout": 15
@@ -1015,7 +1099,7 @@
                         {
                           "Ref": "AWS::AccountId"
                         },
-                        "\"},{\"name\":\"symfony_REPOSITORY_URI\",\"type\":\"PLAINTEXT\",\"value\":\"",
+                        "\"},{\"name\":\"phpfpm_REPOSITORY_URI\",\"type\":\"PLAINTEXT\",\"value\":\"",
                         {
                           "Fn::Select": [
                             4,
@@ -1024,7 +1108,7 @@
                                 ":",
                                 {
                                   "Fn::GetAtt": [
-                                    "symfonyRepository",
+                                    "phpfpmRepository",
                                     "Arn"
                                   ]
                                 }
@@ -1041,7 +1125,7 @@
                                 ":",
                                 {
                                   "Fn::GetAtt": [
-                                    "symfonyRepository",
+                                    "phpfpmRepository",
                                     "Arn"
                                   ]
                                 }
@@ -1055,7 +1139,49 @@
                         },
                         "/",
                         {
-                          "Ref": "symfonyRepository"
+                          "Ref": "phpfpmRepository"
+                        },
+                        "\"},{\"name\":\"nginx_REPOSITORY_URI\",\"type\":\"PLAINTEXT\",\"value\":\"",
+                        {
+                          "Fn::Select": [
+                            4,
+                            {
+                              "Fn::Split": [
+                                ":",
+                                {
+                                  "Fn::GetAtt": [
+                                    "nginxRepository",
+                                    "Arn"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        ".dkr.ecr.",
+                        {
+                          "Fn::Select": [
+                            3,
+                            {
+                              "Fn::Split": [
+                                ":",
+                                {
+                                  "Fn::GetAtt": [
+                                    "nginxRepository",
+                                    "Arn"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        ".",
+                        {
+                          "Ref": "AWS::URLSuffix"
+                        },
+                        "/",
+                        {
+                          "Ref": "nginxRepository"
                         },
                         "\"}]"
                       ]
@@ -1123,7 +1249,7 @@
                   "ClusterName": {
                     "Ref": "NetworkStackClusterName"
                   },
-                  "ServiceName": "symfony-service-php-nginx-8000"
+                  "ServiceName": "symfony-service-nginx-80"
                 },
                 "InputArtifacts": [
                   {
@@ -1147,7 +1273,7 @@
           "Location": "amplify-symfony-dev-145340-deployment",
           "Type": "S3"
         },
-        "Name": "amplify-symfony-dev-145340-symfony-service-php-nginx-8000"
+        "Name": "amplify-symfony-dev-145340-symfony-service-nginx-80"
       },
       "DependsOn": [
         "ApiPipelinePipelineRoleDefaultPolicyB3AD67CF",
@@ -2386,7 +2512,7 @@
   },
   "Outputs": {
     "ServiceName": {
-      "Value": "symfony-service-php-nginx-8000"
+      "Value": "symfony-service-nginx-80"
     },
     "ClusterName": {
       "Value": {
@@ -2394,10 +2520,10 @@
       }
     },
     "PipelineName": {
-      "Value": "amplify-symfony-dev-145340-symfony-service-php-nginx-8000"
+      "Value": "amplify-symfony-dev-145340-symfony-service-nginx-80"
     },
     "ContainerNames": {
-      "Value": "symfony"
+      "Value": "phpfpm,nginx"
     },
     "ApiName": {
       "Value": "symfony"
