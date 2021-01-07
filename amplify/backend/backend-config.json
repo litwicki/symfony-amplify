@@ -1,6 +1,6 @@
 {
   "auth": {
-    "cognitoadc27a4f": {
+    "cognitodf6e6347": {
       "service": "Cognito",
       "serviceType": "managed",
       "providerPlugin": "awscloudformation"
@@ -24,7 +24,7 @@
         },
         {
           "category": "auth",
-          "resourceName": "cognitoadc27a4f",
+          "resourceName": "cognitodf6e6347",
           "attributes": [
             "UserPoolId",
             "AppClientIDWeb"
@@ -39,7 +39,7 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "ElasticContainer",
-      "authName": "cognitoadc27a4f",
+      "authName": "cognitodf6e6347",
       "skipHashing": false,
       "apiType": "REST",
       "iamAccessUnavailable": true

@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "symfonyamplify_identitypool_e6972aa4",
+    "identityPoolName": "symfony_identitypool_520d96f0",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "symfone6972aa4",
-    "userPoolName": "symfonyamplify_userpool_e6972aa4",
+    "resourceNameTruncated": "symfon520d96f0",
+    "userPoolName": "symfony_userpool_520d96f0",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "symfone6972aa4_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "symfon520d96f0_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
     "authSelections": "identityPoolAndUserPool",
-    "resourceName": "cognitoadc27a4f",
+    "resourceName": "cognitodf6e6347",
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",

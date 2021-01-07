@@ -24,16 +24,16 @@
     "NetworkStackCloudMapNamespaceId": {
       "Type": "String"
     },
-    "authcognitoadc27a4fUserPoolId": {
+    "authcognitodf6e6347UserPoolId": {
       "Type": "String"
     },
-    "authcognitoadc27a4fAppClientIDWeb": {
+    "authcognitodf6e6347AppClientIDWeb": {
       "Type": "String"
     },
     "AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43": {
       "Type": "String",
       "Description": "S3 bucket for asset \"c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c\"",
-      "Default": "amplify-symfonyamplify-dev-212226-deployment"
+      "Default": "amplify-symfony-dev-145340-deployment"
     },
     "AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7": {
       "Type": "String",
@@ -60,7 +60,7 @@
             {
               "Fn::Equals": [
                 {
-                  "Ref": "authcognitoadc27a4fUserPoolId"
+                  "Ref": "authcognitodf6e6347UserPoolId"
                 },
                 ""
               ]
@@ -72,7 +72,7 @@
             {
               "Fn::Equals": [
                 {
-                  "Ref": "authcognitoadc27a4fAppClientIDWeb"
+                  "Ref": "authcognitodf6e6347AppClientIDWeb"
                 },
                 ""
               ]
@@ -139,7 +139,7 @@
                           ":",
                           {
                             "Fn::GetAtt": [
-                              "symfony-amplifyRepository",
+                              "symfonyRepository",
                               "Arn"
                             ]
                           }
@@ -156,7 +156,7 @@
                           ":",
                           {
                             "Fn::GetAtt": [
-                              "symfony-amplifyRepository",
+                              "symfonyRepository",
                               "Arn"
                             ]
                           }
@@ -170,7 +170,7 @@
                   },
                   "/",
                   {
-                    "Ref": "symfony-amplifyRepository"
+                    "Ref": "symfonyRepository"
                   },
                   ":latest"
                 ]
@@ -180,7 +180,7 @@
               "LogDriver": "awslogs",
               "Options": {
                 "awslogs-group": {
-                  "Ref": "symfonyamplifyContainerLogGroup55AD2946"
+                  "Ref": "symfonyContainerLogGroup0AD81F86"
                 },
                 "awslogs-stream-prefix": "ecs",
                 "awslogs-region": {
@@ -188,7 +188,7 @@
                 }
               }
             },
-            "Name": "symfony-amplify",
+            "Name": "symfony",
             "Secrets": [],
             "WorkingDirectory": "/var/www/"
           },
@@ -271,7 +271,7 @@
             "Arn"
           ]
         },
-        "Family": "amplify-symfonyamplify-dev-212226-symfony",
+        "Family": "amplify-symfony-dev-145340-symfony",
         "Memory": "1024",
         "NetworkMode": "awsvpc",
         "RequiresCompatibilities": [
@@ -316,7 +316,7 @@
               "Effect": "Allow",
               "Resource": {
                 "Fn::GetAtt": [
-                  "symfony-amplifyRepository",
+                  "symfonyRepository",
                   "Arn"
                 ]
               }
@@ -350,7 +350,7 @@
                     },
                     ":log-group:",
                     {
-                      "Ref": "symfonyamplifyContainerLogGroup55AD2946"
+                      "Ref": "symfonyContainerLogGroup0AD81F86"
                     },
                     ":*"
                   ]
@@ -430,22 +430,22 @@
         ]
       }
     },
-    "symfonyamplifyContainerLogGroup55AD2946": {
+    "symfonyContainerLogGroup0AD81F86": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/ecs/amplify-symfonyamplify-dev-212226-symfony-symfony-amplify",
+        "LogGroupName": "/ecs/amplify-symfony-dev-145340-symfony-symfony",
         "RetentionInDays": 30
       },
       "UpdateReplacePolicy": "Delete",
       "DeletionPolicy": "Delete"
     },
-    "symfony-amplifyRepository": {
+    "symfonyRepository": {
       "Type": "AWS::ECR::Repository",
       "Properties": {
         "LifecyclePolicy": {
           "LifecyclePolicyText": "{\"rules\":[{\"rulePriority\":10,\"selection\":{\"tagStatus\":\"tagged\",\"tagPrefixList\":[\"latest\"],\"countType\":\"imageCountMoreThan\",\"countNumber\":1},\"action\":{\"type\":\"expire\"}},{\"rulePriority\":100,\"selection\":{\"tagStatus\":\"any\",\"countType\":\"sinceImagePushed\",\"countNumber\":7,\"countUnit\":\"days\"},\"action\":{\"type\":\"expire\"}}]}"
         },
-        "RepositoryName": "amplify-symfonyamplify-dev-212226-api-symfony-symfony-amplify"
+        "RepositoryName": "amplify-symfony-dev-145340-api-symfony-symfony"
       },
       "UpdateReplacePolicy": "Retain",
       "DeletionPolicy": "Retain"
@@ -453,7 +453,7 @@
     "mysqldbContainerLogGroupC8D1E030": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/ecs/amplify-symfonyamplify-dev-212226-symfony-mysql-db",
+        "LogGroupName": "/ecs/amplify-symfony-dev-145340-symfony-mysql-db",
         "RetentionInDays": 30
       },
       "UpdateReplacePolicy": "Delete",
@@ -462,7 +462,7 @@
     "phpnginxContainerLogGroup34737FCE": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/ecs/amplify-symfonyamplify-dev-212226-symfony-php-nginx",
+        "LogGroupName": "/ecs/amplify-symfony-dev-145340-symfony-php-nginx",
         "RetentionInDays": 30
       },
       "UpdateReplacePolicy": "Delete",
@@ -690,7 +690,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment"
+                      ":s3:::amplify-symfony-dev-145340-deployment"
                     ]
                   ]
                 },
@@ -702,7 +702,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment/*"
+                      ":s3:::amplify-symfony-dev-145340-deployment/*"
                     ]
                   ]
                 }
@@ -880,7 +880,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment"
+                      ":s3:::amplify-symfony-dev-145340-deployment"
                     ]
                   ]
                 },
@@ -892,7 +892,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment/*"
+                      ":s3:::amplify-symfony-dev-145340-deployment/*"
                     ]
                   ]
                 }
@@ -972,7 +972,7 @@
                   "Version": "1"
                 },
                 "Configuration": {
-                  "S3Bucket": "amplify-symfonyamplify-dev-212226-deployment",
+                  "S3Bucket": "amplify-symfony-dev-145340-deployment",
                   "S3ObjectKey": {
                     "Ref": "ParamZipPath"
                   }
@@ -1015,7 +1015,7 @@
                         {
                           "Ref": "AWS::AccountId"
                         },
-                        "\"},{\"name\":\"symfony-amplify_REPOSITORY_URI\",\"type\":\"PLAINTEXT\",\"value\":\"",
+                        "\"},{\"name\":\"symfony_REPOSITORY_URI\",\"type\":\"PLAINTEXT\",\"value\":\"",
                         {
                           "Fn::Select": [
                             4,
@@ -1024,7 +1024,7 @@
                                 ":",
                                 {
                                   "Fn::GetAtt": [
-                                    "symfony-amplifyRepository",
+                                    "symfonyRepository",
                                     "Arn"
                                   ]
                                 }
@@ -1041,7 +1041,7 @@
                                 ":",
                                 {
                                   "Fn::GetAtt": [
-                                    "symfony-amplifyRepository",
+                                    "symfonyRepository",
                                     "Arn"
                                   ]
                                 }
@@ -1055,7 +1055,7 @@
                         },
                         "/",
                         {
-                          "Ref": "symfony-amplifyRepository"
+                          "Ref": "symfonyRepository"
                         },
                         "\"}]"
                       ]
@@ -1144,10 +1144,10 @@
           }
         ],
         "ArtifactStore": {
-          "Location": "amplify-symfonyamplify-dev-212226-deployment",
+          "Location": "amplify-symfony-dev-145340-deployment",
           "Type": "S3"
         },
-        "Name": "amplify-symfonyamplify-dev-212226-symfony-service-php-nginx-8000"
+        "Name": "amplify-symfony-dev-145340-symfony-service-php-nginx-8000"
       },
       "DependsOn": [
         "ApiPipelinePipelineRoleDefaultPolicyB3AD67CF",
@@ -1211,7 +1211,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment"
+                      ":s3:::amplify-symfony-dev-145340-deployment"
                     ]
                   ]
                 },
@@ -1223,7 +1223,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment/*"
+                      ":s3:::amplify-symfony-dev-145340-deployment/*"
                     ]
                   ]
                 }
@@ -1245,7 +1245,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment"
+                      ":s3:::amplify-symfony-dev-145340-deployment"
                     ]
                   ]
                 },
@@ -1257,7 +1257,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment/*"
+                      ":s3:::amplify-symfony-dev-145340-deployment/*"
                     ]
                   ]
                 }
@@ -1495,7 +1495,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment"
+                      ":s3:::amplify-symfony-dev-145340-deployment"
                     ]
                   ]
                 },
@@ -1507,7 +1507,7 @@
                       {
                         "Ref": "AWS::Partition"
                       },
-                      ":s3:::amplify-symfonyamplify-dev-212226-deployment/*"
+                      ":s3:::amplify-symfony-dev-145340-deployment/*"
                     ]
                   ]
                 }
@@ -2223,7 +2223,7 @@
             "Arn"
           ]
         },
-        "artifactBucketName": "amplify-symfonyamplify-dev-212226-deployment",
+        "artifactBucketName": "amplify-symfony-dev-145340-deployment",
         "artifactKey": {
           "Ref": "ParamZipPath"
         },
@@ -2255,7 +2255,7 @@
             "*"
           ]
         },
-        "Name": "amplify-symfonyamplify-dev-212226-symfony",
+        "Name": "amplify-symfony-dev-145340-symfony",
         "ProtocolType": "HTTP"
       }
     },
@@ -2304,7 +2304,7 @@
         "JwtConfiguration": {
           "Audience": [
             {
-              "Ref": "authcognitoadc27a4fAppClientIDWeb"
+              "Ref": "authcognitodf6e6347AppClientIDWeb"
             }
           ],
           "Issuer": {
@@ -2317,7 +2317,7 @@
                 },
                 ".amazonaws.com/",
                 {
-                  "Ref": "authcognitoadc27a4fUserPoolId"
+                  "Ref": "authcognitodf6e6347UserPoolId"
                 }
               ]
             ]
@@ -2394,10 +2394,10 @@
       }
     },
     "PipelineName": {
-      "Value": "amplify-symfonyamplify-dev-212226-symfony-service-php-nginx-8000"
+      "Value": "amplify-symfony-dev-145340-symfony-service-php-nginx-8000"
     },
     "ContainerNames": {
-      "Value": "symfony-amplify"
+      "Value": "symfony"
     },
     "ApiName": {
       "Value": "symfony"
