@@ -21,14 +21,6 @@
             "VpcLinkId",
             "CloudMapNamespaceId"
           ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "cognitodf6e6347",
-          "attributes": [
-            "UserPoolId",
-            "AppClientIDWeb"
-          ]
         }
       ],
       "deploymentMechanism": "FULLY_MANAGED",
