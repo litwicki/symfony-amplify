@@ -1,15 +1,15 @@
 #custom stuff
 .idea
-amplify/backend/api/symfony/src/.env
+/amplify/backend/api/symfony/src/.env
 
 ###> symfony/framework-bundle ###
-/app/.env.local
-/app/.env.local.php
-/app/.env.*.local
-/app/config/secrets/prod/prod.decrypt.private.php
-/app/public/bundles/
-/app/var/
-/app/vendor/
+/amplify/backend/api/symfony/src/app/.env.local
+/amplify/backend/api/symfony/src/app/.env.local.php
+/amplify/backend/api/symfony/src/app/.env.*.local
+/amplify/backend/api/symfony/src/app/config/secrets/prod/prod.decrypt.private.php
+/amplify/backend/api/symfony/src/app/public/bundles/
+/amplify/backend/api/symfony/src/app/var/
+/amplify/backend/api/symfony/src/app/vendor/
 ###< symfony/framework-bundle ###
 
 #amplify

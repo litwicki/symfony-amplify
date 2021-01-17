@@ -10,6 +10,11 @@
       "StackName": "amplify-symfony-dev-225528",
       "StackId": "arn:aws:cloudformation:us-west-2:207996445507:stack/amplify-symfony-dev-225528/560cbc70-50b5-11eb-997a-06a27da41c23",
       "AmplifyAppId": "d1dmtz4grgiiqg"
+    },
+    "categories": {
+      "auth": {
+        "symfony12327c06": {}
+      }
     }
   }
 }
