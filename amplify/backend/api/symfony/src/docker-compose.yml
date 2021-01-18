@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+    phpfpm:
+        build:
+            context: ./app
+        working_dir: /var/www/html
+        volumes:
+            - ./app/:/var/www/html
+        networks:
+            - amplify
+    nginx:
+        build:
+            context: nginx
+        working_dir: /var/www/html
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./app/:/var/www/html
+            - ./nginx/conf.d:/etc/nginx/conf.d
+        links:
+            - phpfpm
+        networks:
+            - amplify
+networks:
+    amplify:
+        driver: bridge

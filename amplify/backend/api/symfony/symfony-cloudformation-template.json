@@ -379,7 +379,8 @@
                 "Protocol": "tcp"
               }
             ],
-            "Secrets": []
+            "Secrets": [],
+            "WorkingDirectory": "/var/www/html"
           }
         ],
         "Cpu": "512",
@@ -617,7 +618,7 @@
         "Cluster": {
           "Ref": "NetworkStackClusterName"
         },
-        "DesiredCount": 0,
+        "DesiredCount": 1,
         "LaunchType": "FARGATE",
         "NetworkConfiguration": {
           "AwsvpcConfiguration": {
