@@ -12,24 +12,24 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | md5sum | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - echo Logging in to Docker because rate limiting is terrible
+      - docker login
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $phpfpm_REPOSITORY_URI:latest ././app
-      - docker tag $phpfpm_REPOSITORY_URI:latest $phpfpm_REPOSITORY_URI:$IMAGE_TAG
-
+      - docker build -t $php_REPOSITORY_URI:latest ././app
+      - docker tag $php_REPOSITORY_URI:latest $php_REPOSITORY_URI:$IMAGE_TAG
       - docker build -t $nginx_REPOSITORY_URI:latest ./nginx
       - docker tag $nginx_REPOSITORY_URI:latest $nginx_REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker images..
-      - docker push $phpfpm_REPOSITORY_URI:latest
-      - docker push $phpfpm_REPOSITORY_URI:$IMAGE_TAG
-
+      - docker push $php_REPOSITORY_URI:latest
+      - docker push $php_REPOSITORY_URI:$IMAGE_TAG
       - docker push $nginx_REPOSITORY_URI:latest
       - docker push $nginx_REPOSITORY_URI:$IMAGE_TAG
-      - "echo \"[{\\\"name\\\":\\\"phpfpm\\\", \\\"imageUri\\\":\\\"$phpfpm_REPOSITORY_URI\\\"},{\\\"name\\\":\\\"nginx\\\", \\\"imageUri\\\":\\\"$nginx_REPOSITORY_URI\\\"}]\" > imagedefinitions.json"
+      - "echo \"[{\\\"name\\\":\\\"php\\\", \\\"imageUri\\\":\\\"$php_REPOSITORY_URI\\\"},{\\\"name\\\":\\\"nginx\\\", \\\"imageUri\\\":\\\"$nginx_REPOSITORY_URI\\\"}]\" > imagedefinitions.json"
 artifacts:
   files: imagedefinitions.json
