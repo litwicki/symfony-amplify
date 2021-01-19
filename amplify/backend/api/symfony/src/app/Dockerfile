@@ -1,43 +1,24 @@
-FROM php:fpm-8.0
+FROM php:8-fpm-alpine
+
+RUN apk add --update \
+    make \
+    curl \
+    nodejs \
+    yarn
+
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod uga+x /usr/local/bin/install-php-extensions && sync && \
+    install-php-extensions mysqli pdo_mysql
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    ln -s $(composer config --global home) /root/composer
+ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
+
+ADD symfony.ini /usr/local/etc/php/php.ini
+ADD php-fpm.conf /etc/php/php-fpm.d/
 
 WORKDIR /var/www/html
 
-COPY . .
-
-RUN apk --update --no-cache add git
-
-RUN apt-get update \
- && apt-get install -y git \
- libicu-dev \
- libcurl4-gnutls-dev \
- libmcrypt-dev \
- bzip2 \
- libbz2-dev \
- zlib1g-dev \
- g++ \
- libxml2-dev \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
-
-RUN docker-php-ext-install -j$(nproc) intl \
-    && docker-php-ext-install -j$(nproc) curl \
-    && docker-php-ext-install -j$(nproc) bz2 \
-    && docker-php-ext-install -j$(nproc) mysqli \
-    && docker-php-ext-install -j$(nproc) pdo_mysql \
-    && docker-php-ext-install -j$(nproc) mysqli \
-    && docker-php-ext-install -j$(nproc) zip \
-    && docker-php-ext-install -j$(nproc) mcrypt \
-    && docker-php-ext-install -j$(nproc) opcache
-
-# Enable and configure xdebug
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-	php /usr/local/bin/composer self-update
-
-RUN usermod -u 1000 www-data
-
-CMD composer install
-
 EXPOSE 9000
+
+CMD ["php-fpm", "-F"]

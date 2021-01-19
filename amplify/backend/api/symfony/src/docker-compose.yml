@@ -1,25 +1,22 @@
 version: "3.8"
 services:
-    phpfpm:
-        build:
-            context: ./app
+    php:
+        build: ./app
         working_dir: /var/www/html
         volumes:
-            - ./app/:/var/www/html
+            - ./app/:/var/www/html:cached
         networks:
             - amplify
     nginx:
-        build:
-            context: nginx
+        build: nginx
         working_dir: /var/www/html
         ports:
             - "80:80"
             - "443:443"
         volumes:
-            - ./app/:/var/www/html
-            - ./nginx/conf.d:/etc/nginx/conf.d
+            - ./app/:/var/www/html:cached
         links:
-            - phpfpm
+            - php
         networks:
             - amplify
 networks:
